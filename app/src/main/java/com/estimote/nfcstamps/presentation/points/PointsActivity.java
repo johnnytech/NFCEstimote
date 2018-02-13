@@ -152,27 +152,35 @@ public class PointsActivity extends AppCompatActivity {
         System.out.println("Request: " + request.toString());
         OkHttpClient client = networkService.buildClient();
         System.out.println("Request execute ...");
+
         //Response response = client.newCall(request).execute();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getApplicationContext(), "Failed to change the friendly name!", Toast.LENGTH_LONG).show();
                 Log.e(TAG, "onFailure: " + e.getMessage());
+                promptMessage("Failed to change the friendly name!");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                //Toast.makeText(getApplicationContext(), "Succeed to change the friendly name!", Toast.LENGTH_LONG).show();
-                promptMessage("Succeed to change the friendly name!");
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "onResponse: Succeed to change the friendly name!");
                     promptMessage("onResponse: Succeed to change the friendly name!");
-                    mCurrentName.setText(friendlyName);
+                    updateFriendlyName();
                 } else {
-                    //Log.d(TAG, "onResponse: code=" + response.code() + ", refresh token ...");
                     promptMessage("onResponse: code=" + response.code() + ", refresh token ...");
                     refreshToken(token);
                 }
+            }
+        });
+    }
+
+    private void updateFriendlyName() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String result = "ID: " + identity + "\nName: " + friendlyName;
+                mCurrentName.setText(result);
+                mInputName.setHint("Input Friendly Name");
             }
         });
     }
@@ -193,7 +201,12 @@ public class PointsActivity extends AppCompatActivity {
         }
     }
 
-    private void promptMessage(String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+    private void promptMessage(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

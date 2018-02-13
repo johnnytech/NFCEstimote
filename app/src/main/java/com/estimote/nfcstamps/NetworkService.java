@@ -192,9 +192,10 @@ public class NetworkService {
     }
 
     public String refreshToken(String token) {
+        String credentials = "Bearer " + token;
         Request request = new Request.Builder()
                 .header("Content-Type", "application/json")
-                .header("Authorization", token)
+                .header("Authorization", credentials)
                 .get()
                 .url(AUTH_URL)
                 .build();
@@ -220,6 +221,7 @@ public class NetworkService {
             e.printStackTrace();
         }
 
-        return buildRequest(buildURL(BEACONS_URL), jsonObject.toString(), token).build();
+        String credentials = "Bearer " + token;
+        return buildRequest(buildURL(BEACONS_URL), jsonObject.toString(), credentials).build();
     }
 }

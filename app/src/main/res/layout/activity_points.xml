@@ -63,7 +63,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="18sp"
-        android:hint="Friendly Name" />
+        android:hint="Input Friendly Name" />
 
     <Button
         android:id="@+id/modify_name"
